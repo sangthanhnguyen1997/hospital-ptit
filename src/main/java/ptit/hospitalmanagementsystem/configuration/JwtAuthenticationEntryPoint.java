@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import ptit.hospitalmanagementsystem.dto.ApiResponse;
 import ptit.hospitalmanagementsystem.exception.ErrorCode;
 
 import java.io.IOException;

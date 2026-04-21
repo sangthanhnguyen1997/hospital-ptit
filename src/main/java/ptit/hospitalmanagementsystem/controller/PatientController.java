@@ -1,5 +1,11 @@
 //package ptit.hospitalmanagementsystem.controller;
 //
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RestController;
+//import ptit.hospitalmanagementsystem.service.PatientService;
+//
 //@RestController
 //@RequestMapping("/patient")
 //@RequiredArgsConstructor
@@ -9,7 +15,7 @@
 //
 //    // POST /patient/list?page=0&size=10&sort=createdAt,desc
 //    @PostMapping("/list")
-//    public ResponseEntity<ListResponse<PatientResponse>> getPatients(
+//    public ListResponse<PatientResponse> getPatients(
 //            @RequestParam(defaultValue = "0") int page,
 //            @RequestParam(defaultValue = "10") int size,
 //            @RequestParam(defaultValue = "createdAt,desc") String sort,

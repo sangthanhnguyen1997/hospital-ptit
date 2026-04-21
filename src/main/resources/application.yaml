@@ -10,7 +10,7 @@ spring:
 
   datasource:
     # Ket noi den postgres, dung port 5454 va db hospital_db nhu ban cap
-    url: jdbc:postgresql://hospital-postgres:5454/hospital_db
+    url: jdbc:postgresql://hospital-postgres:5432/hospital_db
     username: postgres
     password: 123456789
     driver-class-name: org.postgresql.Driver
