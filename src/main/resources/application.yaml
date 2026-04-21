@@ -1,0 +1,44 @@
+server:
+  port: 8080
+  servlet:
+    # Duong dan goc cua api
+    context-path: /
+
+spring:
+  application:
+    name: hospital-management
+
+  datasource:
+    # Ket noi den postgres, dung port 5454 va db hospital_db nhu ban cap
+    url: jdbc:postgresql://hospital-postgres:5454/hospital_db
+    username: postgres
+    password: 123456789
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # Tu dong tao/cap nhat bảng vao database
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        # Hibernate 6 se tu nhan dien PostgreSQLDialect, khong can ghi cung
+        format_sql: true
+
+logging:
+  file:
+    name: logs/hospital-service.log
+  logback:
+    rollingpolicy:
+      max-history: 30
+      max-file-size: 10MB
+  level:
+    root: INFO
+    # xem log debug
+    com.hospital.management: DEBUG
+
+jwt:
+  # Key nay dung de ky token
+  signerKey: ${JWT_SIGNER_KEY:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef}
+  valid-duration: 3600 # Token có hiệu lực trong 1 tiếng (3600 giây)
+  refreshable-duration: 86400 # Cho phép dùng Refresh Token trong 1 ngày (để lấy Token mới mà không cần gõ lại mật khẩu)
