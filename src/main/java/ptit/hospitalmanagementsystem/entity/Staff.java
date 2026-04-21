@@ -52,4 +52,11 @@ public class Staff {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    public void setUser(User user) {
+        this.user = user;
+        // Nếu user chưa biết về bác sĩ này, hãy báo cho user biết
+        if (user != null && user.getStaff() != this) {
+            user.setStaff(this);
+        }
+    }
 }

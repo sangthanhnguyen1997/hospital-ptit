@@ -62,4 +62,11 @@ public class Patient {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonBackReference
     private User user;
+    public void setUser(User user) {
+        this.user = user;
+        // Nếu user chưa biết về bác sĩ này, hãy báo cho user biết
+        if (user != null && user.getPatient() != this) {
+            user.setPatient(this);
+        }
+    }
 }

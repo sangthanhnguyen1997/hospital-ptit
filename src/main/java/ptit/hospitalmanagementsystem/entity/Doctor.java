@@ -59,4 +59,12 @@ public class Doctor {
     @OneToOne(cascade = CascadeType.ALL) // Thêm cascade ở đây
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    // --- HELPER METHOD ---
+    public void setUser(User user) {
+        this.user = user;
+        // Nếu user chưa biết về bác sĩ này, hãy báo cho user biết
+        if (user != null && user.getDoctor() != this) {
+            user.setDoctor(this);
+        }
+    }
 }

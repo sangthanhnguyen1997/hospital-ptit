@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import ptit.hospitalmanagementsystem.enums.Role;
 import java.time.LocalDate;
 
+@Table(name="app_user")
 @Entity
 @Getter
 @Setter
@@ -49,4 +50,26 @@ public class User {
     // Mapping tới Nhân viên
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Staff staff;
+
+    //helper method
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+        if (patient != null && patient.getUser() != this) {
+            patient.setUser(this); // Tự động set ngược lại cho Patient
+        }
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+        if (doctor != null && doctor.getUser() != this) {
+            doctor.setUser(this); // Tự động set ngược lại cho Doctor
+        }
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+        if (staff != null && staff.getUser() != this) {
+            staff.setUser(this); // Tự động set ngược lại cho Staff
+        }
+    }
 }

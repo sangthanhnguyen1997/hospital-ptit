@@ -7,12 +7,12 @@ import ptit.hospitalmanagementsystem.repository.PatientRepository;
 
 @Service
 public class PatientService {
-    PatientRepository patientRepository;
-    PatientCreationResponse createPatient(PatientCreationRequest request){
-        if(patientRepository.existsBy)
-
-    }
-    updatePatient()
-    deletePatient()
+//    PatientRepository patientRepository;
+//    PatientCreationResponse createPatient(PatientCreationRequest request){
+//        if(patientRepository.existsBy)
+//
+//    }
+//    updatePatient()
+//    deletePatient()
 
 }
