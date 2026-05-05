@@ -1,4 +1,4 @@
-package ptit.hospitalmanagementsystem.dto.respond;
+package ptit.hospitalmanagementsystem.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,9 +9,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PatientResponse {
-    Long id;
-    String username;
+public class PatientRequest {
+    Long healthcareCenterId;
     String fullName;
     LocalDate dateOfBirth;
     String gender;
@@ -19,5 +18,4 @@ public class PatientResponse {
     String identityNumber;
     String address;
     String healthInsuranceNumber;
-    LocalDate createdAt;
 }

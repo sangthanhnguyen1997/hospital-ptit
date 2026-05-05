@@ -2,6 +2,8 @@ package ptit.hospitalmanagementsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ptit.hospitalmanagementsystem.enums.Gender;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,10 @@ public class Doctor {
 
     @Column(name = "ho_ten", nullable = false, length = 200)
     private String fullName;
+
+    @Enumerated(EnumType.STRING) // Thêm Gender Enum
+    @Column(name = "gioi_tinh")
+    private Gender gender;
 
     @Column(name = "chuyen_khoa", length = 100)
     private String specialty;

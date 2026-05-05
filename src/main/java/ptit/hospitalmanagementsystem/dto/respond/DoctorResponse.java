@@ -2,22 +2,21 @@ package ptit.hospitalmanagementsystem.dto.respond;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.time.LocalDate;
+
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PatientResponse {
+public class DoctorResponse {
     Long id;
-    String username;
+    String healthcareCenterName; // Trả về tên cơ sở cho thân thiện
     String fullName;
-    LocalDate dateOfBirth;
     String gender;
+    String specialty;
+    String practicingCertificate;
     String phoneNumber;
-    String identityNumber;
-    String address;
-    String healthInsuranceNumber;
-    LocalDate createdAt;
+    String email;
+    Boolean isActive;
 }

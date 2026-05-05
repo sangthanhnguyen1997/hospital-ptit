@@ -1,16 +1,43 @@
+version: '3.8'
+
 services:
-  hospital-postgres:
-    image: postgres:16
+  # --- DỊCH VỤ DATABASE ---
+  db:
+    image: postgres:16-alpine
     container_name: hospital-postgres
     environment:
       POSTGRES_DB: hospital_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456789
     ports:
-      - "5454:5432"
-#      port: 5454 - localhost
+      - "5454:5432" # vẫn có thể dùng DBeaver/IntelliJ connect vào từ máy thật
     volumes:
-      - hospital_postgres_data:/var/lib/postgresql/data
+      # Dấu chấm (.) đại diện cho thư mục chứa file compose hiện tại
+      - ./postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # --- DỊCH VỤ BACKEND APP ---
+  app:
+    image: sangthanh222/hospital-app:v1
+    container_name: hospital-app
+    depends_on:
+      db:
+        condition: service_healthy # Chỉ chạy App khi DB đã sẵn sàng thực sự
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: 123456789
+      # Dùng key mặc định hoặc biến môi trường nếu có
+      JWT_SIGNER_KEY: ${JWT_SIGNER_KEY:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef}
+    ports:
+      - "8080:8080"
+    restart: always
+
+# Khai báo volume để lưu trữ dữ liệu bền vững
 volumes:
   hospital_postgres_data:

@@ -25,7 +25,7 @@ public class HealthcareController {
     HealthcareService healthcareService;
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    ApiResponse<List<HealthcareCenterResponse>> getHealthcare(){
+    ApiResponse<List<HealthcareCenterResponse>> getAllHealthcare(){
         //xu ly service
         List<HealthcareCenterResponse> response = healthcareService.getHealthcareCenters();
 
@@ -35,7 +35,7 @@ public class HealthcareController {
     }
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    ApiResponse<PageResponse<HealthcareCenterResponse>> getAll(
+    ApiResponse<PageResponse<HealthcareCenterResponse>> getpaging(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {

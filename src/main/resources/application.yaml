@@ -1,7 +1,6 @@
 server:
   port: 8080
   servlet:
-    # Duong dan goc cua api
     context-path: /
 
 spring:
@@ -9,36 +8,28 @@ spring:
     name: hospital-management
 
   datasource:
-    # Ket noi den postgres, dung port 5454 va db hospital_db nhu ban cap
-    url: jdbc:postgresql://localhost:5454/hospital_db?options=-c%20timezone=UTC
-    username: postgres
-    password: 123456789
+    # 1. localhost -> ${DB_HOST:localhost} (Mặc định là localhost nếu chạy ngoài, lấy từ biến DB_HOST nếu chạy Docker)
+    # 2. 5454 -> ${DB_PORT:5454} (Đồng bộ port với container Database)
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5454}/hospital_db?options=-c%20timezone=UTC
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:123456789}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      # Tu dong tao/cap nhat bảng vao database
-      ddl-auto: create
+      # Khi lên Docker nên dùng 'update' để tránh mất dữ liệu mỗi lần restart container
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
-        # Hibernate 6 se tu nhan dien PostgreSQLDialect, khong can ghi cung
         format_sql: true
 
 logging:
-  file:
-    name: logs/hospital-service.log
-  logback:
-    rollingpolicy:
-      max-history: 30
-      max-file-size: 10MB
   level:
     root: INFO
-    # xem log debug
-    com.hospital.management: DEBUG
+    ptit.hospitalmanagementsystem: DEBUG # Sửa lại package cho đúng project của bạn
 
 jwt:
-  # Key nay dung de ky token
   signerKey: ${JWT_SIGNER_KEY:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef}
-  valid-duration: 3600 # Token có hiệu lực trong 1 tiếng (3600 giây)
-  refreshable-duration: 86400 # Cho phép dùng Refresh Token trong 1 ngày (để lấy Token mới mà không cần gõ lại mật khẩu)
+  valid-duration: 3600
+  refreshable-duration: 86400

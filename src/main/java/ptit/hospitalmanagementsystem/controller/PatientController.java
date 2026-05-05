@@ -1,54 +1,73 @@
-//package ptit.hospitalmanagementsystem.controller;
-//
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//import ptit.hospitalmanagementsystem.service.PatientService;
-//
-//@RestController
-//@RequestMapping("/patient")
-//@RequiredArgsConstructor
-//public class PatientController {
-//
-//    private final PatientService patientService;
-//
-//    // POST /patient/list?page=0&size=10&sort=createdAt,desc
-//    @PostMapping("/list")
-//    public ListResponse<PatientResponse> getPatients(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size,
-//            @RequestParam(defaultValue = "createdAt,desc") String sort,
-//            @RequestBody PatientSearchRequest searchRequest) { // Chứa name, phoneNumber
-//        return ResponseEntity.ok(patientService.getPatients(page, size, sort, searchRequest));
-//    }
-//
-//    // GET /patient/get/{id}
-//    @GetMapping("/get/{id}")
-//    public ResponseEntity<DetailResponse<PatientResponse>> getPatientById(@PathVariable Integer id) {
-//        return ResponseEntity.ok(patientService.getPatientById(id));
-//    }
-//
-//    // POST /patient/post
-//    @PostMapping("/post")
-//    public ResponseEntity<SuccessResponse> createPatient(@RequestBody PatientCreateRequest request) {
-//        patientService.createPatient(request);
-//        return ResponseEntity.ok(new SuccessResponse("Patient created successfully"));
-//    }
-//
-//    // PUT /patient/put/{id}
-//    @PutMapping("/put/{id}")
-//    public ResponseEntity<SuccessResponse> updatePatient(
-//            @PathVariable Integer id,
-//            @RequestBody PatientUpdateRequest request) {
-//        patientService.updatePatient(id, request);
-//        return ResponseEntity.ok(new SuccessResponse("Patient updated successfully"));
-//    }
-//
-//    // DELETE /patient/delete
-//    @DeleteMapping("/delete")
-//    public ResponseEntity<SuccessResponse> deletePatients(@RequestBody DeleteRequest request) { // Chứa list ids
-//        patientService.deletePatients(request.getIds());
-//        return ResponseEntity.ok(new SuccessResponse("Patients deleted successfully"));
-//    }
-//}
+package ptit.hospitalmanagementsystem.controller;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import ptit.hospitalmanagementsystem.dto.ApiResponse;
+import ptit.hospitalmanagementsystem.dto.PageResponse;
+import ptit.hospitalmanagementsystem.dto.request.PatientRequest;
+import ptit.hospitalmanagementsystem.dto.respond.PatientResponse;
+import ptit.hospitalmanagementsystem.service.PatientService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/patients")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class PatientController {
+    PatientService patientService;
+
+    @PostMapping("/create")
+    ApiResponse<PatientResponse> create(@RequestBody PatientRequest request) {
+        return ApiResponse.<PatientResponse>builder()
+                .code(1000)
+                .result(patientService.createPatient(request))
+                .build();
+    }
+
+    @GetMapping
+    ApiResponse<PageResponse<PatientResponse>> getPaging(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ApiResponse.<PageResponse<PatientResponse>>builder()
+                .code(1000)
+                .result(patientService.getPatientsPaging(page, size))
+                .build();
+    }
+
+    @GetMapping("/all")
+    ApiResponse<List<PatientResponse>> getAll() {
+        return ApiResponse.<List<PatientResponse>>builder()
+                .code(1000)
+                .result(patientService.getAllPatients())
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    ApiResponse<PatientResponse> getById(@PathVariable Long id) {
+        return ApiResponse.<PatientResponse>builder()
+                .code(1000)
+                .result(patientService.getPatientById(id))
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    ApiResponse<PatientResponse> update(@PathVariable Long id, @RequestBody PatientRequest request) {
+        return ApiResponse.<PatientResponse>builder()
+                .code(1000)
+                .result(patientService.updatePatient(id, request))
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    ApiResponse<Void> delete(@PathVariable Long id) {
+        patientService.deletePatient(id);
+        return ApiResponse.<Void>builder()
+                .code(1000)
+                .message("Xóa bệnh nhân thành công")
+                .build();
+    }
+}

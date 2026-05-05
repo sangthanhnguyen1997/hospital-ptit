@@ -33,8 +33,8 @@ public class ExaminationRoom {
 
     @Column(name = "trang_thai", nullable = false)
     private Boolean isActive = true;
-
-    @OneToMany(mappedBy = "examinationRoom")
-    @Builder.Default
-    private List<ExaminationTicket> examinationTickets = new ArrayList<>();
+//phòng khám không cần lưu thông tin của phiếu khám vì có rất nhiều.
+//    @OneToMany(mappedBy = "examinationRoom")
+//    @Builder.Default
+//    private List<ExaminationTicket> examinationTickets = new ArrayList<>();
 }
