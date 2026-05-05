@@ -25,8 +25,30 @@ public class SecurityConfig {
             "/auth/login",
             "/auth/introspect",
             "/auth/refresh",
-            "/auth/logout" // Endpoint logout mới thêm vào
+            "/auth/logout",
+
     };
+    private final String[] SWAGGER_WHITELIST = {
+            // 1. OpenAPI JSON (Nơi chứa cấu hình toàn bộ API của bạn)
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+
+            // 2. Swagger UI (Giao diện web xanh xanh)
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+
+            // 3. Swagger Resources (Cấu hình cho giao diện)
+            "/swagger-resources",
+            "/swagger-resources/**",
+
+            // 4. Webjars (Chứa các file static như CSS, JS, hình ảnh)
+            "/webjars/**",
+
+            // 5. Thêm endpoint này nếu bạn dùng thư viện cũ hoặc cấu hình redirect
+            "/configuration/ui",
+            "/configuration/security"
+    };
+
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
@@ -37,7 +59,8 @@ public class SecurityConfig {
         // --- BƯỚC 1: CẤU HÌNH PHÂN QUYỀN ĐƯỜNG DẪN ---
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll() // Cho phép POST vào các link public
-                        .anyRequest().authenticated()); // Các request còn lại đều phải đăng nhập (có Token)
+                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                 .anyRequest().authenticated()); // Các request còn lại đều phải đăng nhập (có Token)
 
         // --- BƯỚC 2: CẤU HÌNH RESOURCE SERVER (XỬ LÝ JWT) ---
         httpSecurity.oauth2ResourceServer(oauth2 ->
