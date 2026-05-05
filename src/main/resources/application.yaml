@@ -10,7 +10,7 @@ spring:
 
   datasource:
     # Ket noi den postgres, dung port 5454 va db hospital_db nhu ban cap
-    url: jdbc:postgresql://localhost:5432/hospital_db
+    url: jdbc:postgresql://localhost:5454/hospital_db?options=-c%20timezone=UTC
     username: postgres
     password: 123456789
     driver-class-name: org.postgresql.Driver
@@ -18,7 +18,7 @@ spring:
   jpa:
     hibernate:
       # Tu dong tao/cap nhat bảng vao database
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:

@@ -29,6 +29,8 @@ public enum ErrorCode {
 
     // 6. Lỗi Custom Validation: Kiểm tra tuổi (Đặc biệt có placeholder {min} để map dữ liệu động)
     INVALID_DOB(1008, "You must be at least {min} years old", HttpStatus.BAD_REQUEST),
+    // 7. Loi nghiep vu healthcare
+    HEALTHCARE_ERROR(1009, "Healthcare centers are invalid", HttpStatus.BAD_REQUEST),
     ;
 
     /**

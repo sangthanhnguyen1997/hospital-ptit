@@ -1,8 +1,6 @@
 package ptit.hospitalmanagementsystem.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -10,11 +8,13 @@ import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PageResponse<T> {
-    List<T> items;      // Danh sách Patient hoặc Facility
-    long totalElements;
+    int currentPage;
     int totalPages;
-    int page;
-    int size;
+    long totalElements;
+    int pageSize;
+    List<T> data;
 }

@@ -27,6 +27,7 @@ public class HealthcareCenter {
     @Column(name = "so_dien_thoai", length = 20)
     private String phoneNumber;
 
+    @Builder.Default
     @Column(name = "trang_thai", nullable = false)
     private Boolean isActive = true;
 

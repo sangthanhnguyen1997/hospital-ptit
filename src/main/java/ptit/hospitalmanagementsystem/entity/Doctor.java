@@ -38,6 +38,7 @@ public class Doctor {
     private String email;
 
     @Column(name = "dang_lam_viec", nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 
     @OneToMany(mappedBy = "doctor")

@@ -6,4 +6,5 @@ import ptit.hospitalmanagementsystem.entity.HealthcareCenter;
 public interface HealthcareCenterRepository extends JpaRepository<HealthcareCenter,Long> {
 
 
+    boolean existsByCenterName(String centerName);
 }

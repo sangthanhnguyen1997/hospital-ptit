@@ -27,8 +27,8 @@ public class User {
     @Column(name = "password", nullable = false)
     String password;
 
-    @Column(name = "last_name", columnDefinition = "TEXT")
-    String fullName;
+    @Column(name = "ho_ten", nullable = false, length = 200)
+    private String fullName;
 
     @Column(name = "dob")
     LocalDate dob;

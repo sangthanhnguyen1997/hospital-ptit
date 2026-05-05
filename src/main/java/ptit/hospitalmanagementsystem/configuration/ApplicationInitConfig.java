@@ -8,15 +8,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ptit.hospitalmanagementsystem.entity.HealthcareCenter;
-import ptit.hospitalmanagementsystem.entity.Staff;
-import ptit.hospitalmanagementsystem.entity.User;
+import ptit.hospitalmanagementsystem.entity.*;
 import ptit.hospitalmanagementsystem.enums.Role;
-import ptit.hospitalmanagementsystem.repository.HealthcareCenterRepository;
-import ptit.hospitalmanagementsystem.repository.StaffRepository;
-import ptit.hospitalmanagementsystem.repository.UserRepository;
-
-import java.util.Optional;
+import ptit.hospitalmanagementsystem.repository.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,9 +24,11 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(
             UserRepository userRepository,
             StaffRepository staffRepository,
-            HealthcareCenterRepository centerRepository) {
+            HealthcareCenterRepository centerRepository,
+            PatientRepository patientRepository,
+            DoctorRepository doctorRepository) {
         return args -> {
-            // 1. Khởi tạo Cơ sở y tế mặc định (nếu chưa có) vì Staff/Doctor cần có mã cơ sở
+            // 1. Lấy hoặc tạo Cơ sở y tế mặc định
             HealthcareCenter defaultCenter = centerRepository.findById(1L).orElseGet(() ->
                     centerRepository.save(HealthcareCenter.builder()
                             .centerName("Bệnh viện Đa khoa PTIT")
@@ -41,31 +37,75 @@ public class ApplicationInitConfig {
                             .build())
             );
 
-            // 2. Kiểm tra nếu chưa có tài khoản admin
+            // 2. Khởi tạo ADMIN (Giữ nguyên logic của bạn)
             if (userRepository.findByUsername("admin").isEmpty()) {
-
-                // Tạo đối tượng User Admin
-                User adminUser = User.builder()
-                        .username("admin")
-                        .password(passwordEncoder.encode("admin123"))
-                        .roles(Role.ADMIN) // Role Enum bạn đã có
-                        .fullName("Hệ Thống")
-                        .build();
-
-                // Tạo đối tượng Staff tương ứng với Admin
                 Staff adminStaff = Staff.builder()
-                        .fullName("Quản Trị Viên Hệ Thống")
+                        .fullName("Quản Trị Viên")
                         .position("ADMINISTRATOR")
-                        .healthcareCenter(defaultCenter) // Gán vào cơ sở y tế vừa tạo
+                        .healthcareCenter(defaultCenter)
                         .isActive(true)
-                        .user(adminUser) // Mapping 1-1 chuẩn ORM
+                        .user(User.builder()
+                                .username("admin")
+                                .password(passwordEncoder.encode("admin123"))
+                                .roles(Role.ADMIN)
+                                .fullName("Hệ Thống")
+                                .build())
                         .build();
-
-                // Nhờ CascadeType.ALL đã cấu hình trong Entity, chỉ cần save Staff là User sẽ được save theo
                 staffRepository.save(adminStaff);
+                log.info(">>> Đã tạo tài khoản ADMIN (admin/admin123)");
+            }
 
-                log.warn(">>> TÀI KHOẢN ADMIN ĐÃ ĐƯỢC KHỞI TẠO <<<");
-                log.warn("Username: admin / Password: admin123");
+            // 3. Khởi tạo RECEPTIONIST (Lễ tân - Thuộc Staff)
+            if (userRepository.findByUsername("receptionist").isEmpty()) {
+                Staff receptionist = Staff.builder()
+                        .fullName("Nguyễn Văn Lễ Tân")
+                        .position("RECEPTIONIST")
+                        .healthcareCenter(defaultCenter)
+                        .isActive(true)
+                        .user(User.builder()
+                                .username("receptionist")
+                                .password(passwordEncoder.encode("staff123"))
+                                .roles(Role.STAFF) // Giả định Role Enum của bạn có STAFF
+                                .fullName("Lễ Tân 01")
+                                .build())
+                        .build();
+                staffRepository.save(receptionist);
+                log.info(">>> Đã tạo tài khoản RECEPTIONIST (receptionist/staff123)");
+            }
+
+            // 4. Khởi tạo DOCTOR (Bác sĩ - Class riêng)
+            if (userRepository.findByUsername("doctor").isEmpty()) {
+                Doctor doctor = Doctor.builder()
+                        .fullName("BS. Nguyễn Văn mùi")
+                        .specialty("Đa khoa")
+                        .healthcareCenter(defaultCenter)
+                        .isActive(true)
+                        .user(User.builder()
+                                .username("doctor")
+                                .password(passwordEncoder.encode("doctor123"))
+                                .roles(Role.DOCTOR) // Giả định có Role.DOCTOR
+                                .fullName("Bác sĩ Sáng")
+                                .build())
+                        .build();
+                doctorRepository.save(doctor);
+                log.info(">>> Đã tạo tài khoản DOCTOR (doctor/doctor123)");
+            }
+
+            // 5. Khởi tạo PATIENT (Bệnh nhân)
+            if (userRepository.findByUsername("patient").isEmpty()) {
+                Patient patient = Patient.builder()
+                        .fullName("Trần Văn Bệnh Nhân")
+                        .address("Hà Đông, Hà Nội")
+                        .phoneNumber("0988123456")
+                        .user(User.builder()
+                                .username("patient")
+                                .password(passwordEncoder.encode("user123"))
+                                .roles(Role.USER) // Bệnh nhân thường mang Role.USER
+                                .fullName("Bệnh Nhân Test")
+                                .build())
+                        .build();
+                patientRepository.save(patient);
+                log.info(">>> Đã tạo tài khoản PATIENT (patient/user123)");
             }
         };
     }

@@ -27,6 +27,7 @@ import java.text.ParseException;
 public class AuthenticationController {
     AuthenticationService authenticationService;
 
+    //login
     @PostMapping("/token")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         var result = authenticationService.authenticate(request);
@@ -34,9 +35,9 @@ public class AuthenticationController {
                 .result(result)
                 .build();
     }
-
+    //verify token
     @PostMapping("/introspect")
-    ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request)
+    ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request)
             throws ParseException, JOSEException {
 
         var result = authenticationService.introspect(request);
@@ -44,17 +45,18 @@ public class AuthenticationController {
                 .result(result)
                 .build();
     }
+    //logout
     @PostMapping("/logout")
     ApiResponse<Void> logout(@RequestBody LogoutRequest request)
             throws ParseException, JOSEException {
 
         authenticationService.logout(request);
-        return ApiResponse.<Void>builder()
+        return ApiResponse.<Void>builder().message("Logout successfully!")
                 .build();
     }
-
+    //refesh token
     @PostMapping("/refresh")
-    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+    ApiResponse<AuthenticationResponse> refesh(@RequestBody RefreshRequest request)
             throws ParseException, JOSEException {
         var result = authenticationService.refreshToken(request);
         return ApiResponse.<AuthenticationResponse>builder()
