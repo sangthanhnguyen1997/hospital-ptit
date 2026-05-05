@@ -45,6 +45,7 @@ public class HealthcareController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF', 'USER')")
     ApiResponse<HealthcareCenterResponse> getHealthcareById(@PathVariable Long id){
 
         return ApiResponse.<HealthcareCenterResponse>builder()
